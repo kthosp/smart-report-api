@@ -5,7 +5,7 @@ export class SubMenuItemModels {
 
   listall(knex: Knex) {
     return knex(this.tableName)
-      .orderBy('sub_item_id', 'DESC').limit(10);
+      .orderBy('sub_item_id', 'DESC');
   }
 
   selectsub(knex: Knex) {
@@ -14,7 +14,6 @@ export class SubMenuItemModels {
   }
 
   select(knex: Knex, data: any) {
-    // return knex.select('item_id', 'sub_item_name', 'query_sql', 'query_params', 'column_selected', 'template', 'comment', 'sub_item_status', 'level_id', ).from('rep_sub_menu_item')
     return knex(this.tableName)
       .whereNotIn('sub_item_id', data)
 
