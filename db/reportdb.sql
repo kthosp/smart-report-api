@@ -150,4 +150,25 @@ BEGIN;
 INSERT INTO `rep_users` VALUES (1, '3341200274298', 'Administartor', 'admin', '383bdcdb33047bf9a8a2bd11f0055d36', NULL, '3', 'ADMIN', 'Y');
 COMMIT;
 
+-- ----------------------------
+-- Table structure for rep_user_type
+-- ----------------------------
+DROP TABLE IF EXISTS `rep_user_type`;
+CREATE TABLE `rep_user_type` (
+  `type_id` int(5) NOT NULL AUTO_INCREMENT,
+  `type_name` varchar(100) NOT NULL,
+  `type_status` enum('Y','N') DEFAULT 'Y',
+  PRIMARY KEY (`type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of rep_user_type
+-- ----------------------------
+BEGIN;
+INSERT INTO `rep_user_type` VALUES (1, 'General Personnel', 'Y');
+INSERT INTO `rep_user_type` VALUES (2, 'User Management', 'Y');
+INSERT INTO `rep_user_type` VALUES (3, 'Supervisor', 'Y');
+INSERT INTO `rep_user_type` VALUES (4, 'Administrator', 'Y');
+COMMIT;
+
 SET FOREIGN_KEY_CHECKS = 1;
