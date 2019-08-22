@@ -27,6 +27,14 @@ export class SubMenuItemModels {
 
   }
 
+  selectlevel(knex: Knex, item_id: any, userLevel: any) {
+    return knex(this.tableName)
+      .where('item_id', item_id)
+      .andWhere(function () {
+        this.where('level_id', '=', userLevel)
+      })
+  }
+
   listtwo(knex: Knex, item_id: any, userLevel: any) {
     return knex(this.tableName)
       .where('item_id', item_id)

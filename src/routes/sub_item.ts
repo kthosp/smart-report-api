@@ -43,9 +43,16 @@ const router = (fastify, { }, next) => {
   fastify.get('/select/:item_id/:userLevel', { preHandler: [fastify.authenticate] }, async (req: fastify.Request, reply: fastify.Reply) => {
     const item_id = req.params.item_id;
     const userLevel = req.params.userLevel;
+
     try {
-      const rs: any = await subMenuItemModels.listtwo(db, item_id, userLevel);
-      reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: rs, });
+      var rs: any;
+      if (userLevel > '4') {
+        const rs: any = await subMenuItemModels.selectlevel(db, item_id, userLevel);
+        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: rs, });
+      } else {
+        const rs: any = await subMenuItemModels.listtwo(db, item_id, userLevel);
+        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: rs, });
+      }
     } catch (error) {
       fastify.log.error(error);
       reply.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ statusCode: HttpStatus.INTERNAL_SERVER_ERROR, message: HttpStatus.getStatusText(HttpStatus.INTERNAL_SERVER_ERROR) })
