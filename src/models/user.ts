@@ -5,7 +5,7 @@ export class UserModel {
 
   login(db: knex, username: string, password: string) {
     return db(this.tableName)
-      .select('fullname', 'user_id', 'is_accept', 'cid', 'level_id', 'query_group', 'user_type')
+      .select('fullname', 'user_id', 'is_accept', 'cid', 'level_id', 'user_type')
       .where({
         username: username,
         password: password,

@@ -32,8 +32,7 @@ const router = (fastify, { }, next) => {
           cid: info.cid,
           levelId: info.level_id,
           isAccept: info.is_accept,
-          userType: info.user_type,
-          queryGroup: info.query_group,
+          userType: info.user_type
         }, { expiresIn: '1d' });
         reply.status(HttpStatus.OK).send({
           statusCode: HttpStatus.OK, token: token,
