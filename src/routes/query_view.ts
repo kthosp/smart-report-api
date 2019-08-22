@@ -13,7 +13,7 @@ const router = (fastify, { }, next) => {
     reply.code(200).send({ message: 'Welcome to SMART HIS API SMART REPORT HIS!', version: '1.0 build 20190820-1' })
   });
 
-  fastify.post('/query', async (req: fastify.Request, reply: fastify.Reply) => {
+  fastify.post('/query', { preHandler: [fastify.authenticate] }, async (req: fastify.Request, reply: fastify.Reply) => {
     let sql = req.body.query_sql;
     let paramtype = req.body.query_params;
     if (paramtype) {

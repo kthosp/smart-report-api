@@ -3,7 +3,11 @@ import Knex = require('knex');
 export class MenuItemModels {
   listall(knex: Knex) {
     return knex('rep_menu_item')
+  }
 
+  info(knex: Knex) {
+    return knex('rep_menu_item')
+      .where('item_status', 'Y')
   }
 
   selectgroup(knex: Knex, querygroups: any) {
@@ -13,10 +17,11 @@ export class MenuItemModels {
 
   listone(knex: Knex, menu_id: any) {
     return knex('rep_menu_item')
-      .where('menu_id', menu_id);
+      .where('menu_id', menu_id)
+      .andWhere('item_status', 'Y');
   }
 
-  add(knex: Knex, data: any) {
+  save(knex: Knex, data: any) {
     return knex('rep_menu_item')
       .insert(data);
   }

@@ -1,21 +1,17 @@
 import Knex = require('knex');
 
 export class SubMenuItemModels {
-  tableName: string = 'rep_sub_menu_item';
+  tableName: string = 'rep_query_item';
 
   listall(knex: Knex) {
     return knex(this.tableName)
-      .orderBy('sub_item_id', 'DESC');
+      .orderBy('query_id', 'DESC');
   }
 
-  selectsub(knex: Knex) {
-    return knex.select('main_query_id').from(this.tableName)
-
-  }
 
   select(knex: Knex, data: any) {
     return knex(this.tableName)
-      .whereNotIn('sub_item_id', data)
+      .whereNotIn('query_id', data)
 
   }
 
@@ -25,9 +21,9 @@ export class SubMenuItemModels {
 
   }
 
-  listone(knex: Knex, sub_item_id: any) {
+  listone(knex: Knex, query_id: any) {
     return knex(this.tableName)
-      .where('sub_item_id', sub_item_id);
+      .where('query_id', query_id);
 
   }
 
@@ -44,20 +40,20 @@ export class SubMenuItemModels {
       })
   }
 
-  add(knex: Knex, data: any) {
+  save(knex: Knex, data: any) {
     return knex(this.tableName)
       .insert(data);
   }
 
-  update(knex: Knex, sub_item_id: any, data: any) {
+  update(knex: Knex, query_id: any, data: any) {
     return knex(this.tableName)
-      .where('sub_item_id', sub_item_id)
+      .where('query_id', query_id)
       .update(data);
   }
 
-  del(knex: Knex, sub_item_id: any) {
+  del(knex: Knex, query_id: any) {
     return knex(this.tableName)
-      .where('sub_item_id', sub_item_id)
+      .where('query_id', query_id)
       .del();
   }
 

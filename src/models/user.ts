@@ -15,7 +15,7 @@ export class UserModel {
 
   list(db: knex) {
     return db(this.tableName)
-      .select('user_id', 'username', 'cid', 'fullname', 'level_id', 'user_type');
+    // .select('user_id', 'username', 'cid', 'fullname', 'level_id', 'user_type');
   }
 
   save(db: knex, user: any) {

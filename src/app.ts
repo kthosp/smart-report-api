@@ -4,7 +4,6 @@ import path = require('path');
 import * as http from 'http'
 import * as HttpStatus from 'http-status-codes';
 import * as fastify from 'fastify';
-import * as Knex from 'knex';
 
 require('dotenv').config({ path: path.join(__dirname, '../config') });
 
