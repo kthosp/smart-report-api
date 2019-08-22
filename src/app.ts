@@ -158,6 +158,7 @@ app.register(require('./routes/users'), { prefix: '/v1/user', logger: true });
 app.register(require('./routes/sub_item'), { prefix: '/v1/query', logger: true });
 app.register(require('./routes/menu_item'), { prefix: '/v1/menuitem', logger: true });
 app.register(require('./routes/query_view'), { prefix: '/v1/showview', logger: true });
+app.register(require('./routes/user_type'), { prefix: '/v1/usertype', logger: true });
 
 
 app.get('/', async (req: fastify.FastifyRequest<http.IncomingMessage>, reply: fastify.FastifyReply<http.ServerResponse>) => {
