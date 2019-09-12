@@ -32,9 +32,17 @@ const router = (fastify, { }, next) => {
   fastify.post('/', async (req: fastify.Request, reply: fastify.Reply) => {
     const hl7v2 = require('@redoxengine/redox-hl7-v2');
     const parser = new hl7v2.Parser();
-    var hl7Message = req.body;
 
-    const jsonData = parser.parse(hl7Message);
+    console.log(req.body);
+    var x = req.body
+
+    // var hl7Message: string = `${x}`;
+
+    const jsonData = parser.parse(x.info);
+
+    console.log(jsonData);
+    // console.log(x);
+
     let pid = jsonData.PATIENT_RESULT[0].PATIENT.PID[3];
     let order = jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION;
     let colum = jsonData.MSH[3][1];
@@ -42,6 +50,7 @@ const router = (fastify, { }, next) => {
     var msh = {
       msh: [colum, row],
     }
+    // reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: x });
     reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, MSH: msh, PID: pid, ORDERE: order });
 
   });
