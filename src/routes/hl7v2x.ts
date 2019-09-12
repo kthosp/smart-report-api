@@ -32,26 +32,42 @@ const router = (fastify, { }, next) => {
   fastify.post('/', async (req: fastify.Request, reply: fastify.Reply) => {
     const hl7v2 = require('@redoxengine/redox-hl7-v2');
     const parser = new hl7v2.Parser();
-
-    console.log(req.body);
-    var x = req.body
-
+    // console.log(req.body);
     // var hl7Message: string = `${x}`;
-
-    const jsonData = parser.parse(x.info);
-
+    const jsonData = parser.parse(req.body.hl7);
     console.log(jsonData);
-    // console.log(x);
 
-    let pid = jsonData.PATIENT_RESULT[0].PATIENT.PID[3];
-    let order = jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION;
-    let colum = jsonData.MSH[3][1];
-    let row = jsonData.MSH[7][1]
-    var msh = {
-      msh: [colum, row],
+    var info = {
+      MSH: [jsonData.MSH[3][1], jsonData.MSH[7][1]],
+      PID: [jsonData.PATIENT_RESULT[0].PATIENT.PID[3][0][1]],
+      OBR: [
+        jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[6][1],
+        jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[14][1]
+      ],
+      OBSERVATION: {
+        OBX0:
+          [
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[3][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[5][0],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[6][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[14][1]
+          ]
+        ,
+        OBX1: [
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[3][1],
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[5][0],
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[6][1],
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[14][1]
+        ],
+        OBX2: [
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[3][1],
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[5][0],
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[6][1],
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[14][1]
+        ]
+      },
     }
-    // reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: x });
-    reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, MSH: msh, PID: pid, ORDERE: order });
+    reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: info });
 
   });
 
