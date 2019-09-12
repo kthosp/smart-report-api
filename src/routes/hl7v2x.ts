@@ -3,6 +3,7 @@
 import * as knex from 'knex';
 import * as fastify from 'fastify';
 import * as HttpStatus from 'http-status-codes';
+import * as moment from 'moment'
 
 const router = (fastify, { }, next) => {
   var db: knex = fastify.db;
@@ -32,8 +33,10 @@ const router = (fastify, { }, next) => {
   fastify.post('/', async (req: fastify.Request, reply: fastify.Reply) => {
     const hl7v2 = require('@redoxengine/redox-hl7-v2');
     const parser = new hl7v2.Parser();
-    // console.log(req.body);
-    // var hl7Message: string = `${x}`;
+    var isodate = new Date().toISOString();
+    const thDate = `${(moment(isodate).get('year') + 543) - 2500}`;
+
+    var table = 'o' + moment(isodate).format('DDMM') + thDate;
     const jsonData = parser.parse(req.body.hl7);
     console.log(jsonData);
 
@@ -67,6 +70,7 @@ const router = (fastify, { }, next) => {
         ]
       },
     }
+
     reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: info });
 
   });
