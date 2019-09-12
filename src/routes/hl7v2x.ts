@@ -3,7 +3,9 @@
 import * as knex from 'knex';
 import * as fastify from 'fastify';
 import * as HttpStatus from 'http-status-codes';
-import * as moment from 'moment'
+import * as moment from 'moment';
+import { Hl7Models } from '../models/hl72x';
+const hl7Models = new Hl7Models();
 
 const router = (fastify, { }, next) => {
   var db: knex = fastify.db;
@@ -21,7 +23,7 @@ const router = (fastify, { }, next) => {
     let pid = jsonData.PATIENT_RESULT[0].PATIENT.PID[3];
     let order = jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION;
     let colum = jsonData.MSH[3][1];
-    let row = jsonData.MSH[7][1]
+    let row = jsonData.MSH[7][1];
     var msh = {
       msh: [colum, row],
     }
@@ -71,7 +73,41 @@ const router = (fastify, { }, next) => {
       },
     }
 
-    reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: info });
+    let status = info.MSH[0];
+    let CID = info.PID[0];
+    let _info: any;
+    let _vn: any;
+
+    let rs = await hl7Models.getPID(db, CID);
+    let PID = rs[0];
+    let rsx = await hl7Models.getPID(db, PID);
+    _vn = rsx[0];
+
+    if (status == 'LABOLINK02') {
+      _info = {
+        SYSTOLIC: info.OBSERVATION.OBX0[1],
+        PULSE: info.OBSERVATION.OBX1[1],
+        DIASTOLIC: info.OBSERVATION.OBX2[1]
+      }
+      let rsbp = await hl7Models.updateBP(db, _vn, _info);
+      let rsbp_o = await hl7Models.updateBP_o(db, _vn, _info, table);
+      reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
+
+    } else if (status == 'LABOLINK01') {
+      _info = {
+        BMI: info.OBSERVATION.OBX0[1],
+        WEIGHT: info.OBSERVATION.OBX1[1],
+        HEIGHT: info.OBSERVATION.OBX2[1]
+      }
+      let rsbp = await hl7Models.updateBW(db, _vn, _info);
+      let rsbp_o = await hl7Models.updateBW_o(db, _vn, _info, table);
+      reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
+
+    } else {
+      reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: info });
+    }
+
+    reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: _info, datas: info });
 
   });
 

@@ -20,18 +20,18 @@ export class Hl7Models {
       .update(data);
   }
 
-  updateBP(knex: Knex, vn: any, DIASTOLIC: any, SYSTOLIC: any, PULSE: any) {
-    return knex.raw(`update ovst set dbp = ${DIASTOLIC},sbp = ${SYSTOLIC}, pr= ${PULSE} where vn = ${vn}`);
+  updateBP(knex: Knex, vn: any, _info: any) {
+    return knex.raw(`update ovst set dbp = ${_info.DIASTOLIC},sbp = ${_info.SYSTOLIC}, pr= ${_info.PULSE} where vn = ${vn}`);
   }
 
-  updateBW(knex: Knex, vn: any, WEIGHT: any, HEIGHT: any, BMI: any) {
-    return knex.raw(`update ovst set bw = ${WEIGHT},height = ${HEIGHT}, bmi= ${BMI} where vn = ${vn}`);
+  updateBW(knex: Knex, vn: any, _info: any) {
+    return knex.raw(`update ovst set bw = ${_info.WEIGHT},height = ${_info.HEIGHT}, bmi= ${_info.BMI} where vn = ${vn}`);
   }
-  updateBP_o(knex: Knex, vn: any, DIASTOLIC: any, SYSTOLIC: any, PULSE: any, table: any) {
-    return knex.raw(`update ${table} set dbp = ${DIASTOLIC},sbp = ${SYSTOLIC}, pr= ${PULSE} where vn = ${vn}`);
+  updateBP_o(knex: Knex, vn: any, _info: any, table: any) {
+    return knex.raw(`update ${table} set dbp = ${_info.DIASTOLIC},sbp = ${_info.SYSTOLIC}, pr= ${_info.PULSE} where vn = ${vn}`);
   }
 
-  updateBW_o(knex: Knex, vn: any, WEIGHT: any, HEIGHT: any, BMI: any, table: any) {
-    return knex.raw(`update ${table} set bw = ${WEIGHT},height = ${HEIGHT}, bmi= ${BMI} where vn = ${vn}`);
+  updateBW_o(knex: Knex, vn: any, _info: any, table: any) {
+    return knex.raw(`update ${table} set bw = ${_info.WEIGHT},height = ${_info.HEIGHT}, bmi= ${_info.BMI} where vn = ${vn}`);
   }
 }
