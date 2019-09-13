@@ -148,7 +148,7 @@ const router = (fastify, { }, next) => {
       if (_vn) {
         let rsbp = await hl7Models.updateBP(db, _vn, _info);
         // let rsbp_o = await hl7Models.updateBP_o(db, _vn, _info, table);
-        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp] })
+        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: _info })
       } else {
         reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: 'ไม่พบผู้รับบริการในวันนี้', datas: _info, PID: PID });
       }
@@ -163,7 +163,7 @@ const router = (fastify, { }, next) => {
       if (_vn) {
         let rsbp = await hl7Models.updateBW(db, _vn, _info);
         // let rsbp_o = await hl7Models.updateBW_o(db, _vn, _info, table);
-        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp] })
+        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: _info })
       } else {
         reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: 'ไม่พบผู้รับบริการในวันนี้', datas: _info, PID: PID });
       }
