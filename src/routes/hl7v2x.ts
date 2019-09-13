@@ -39,7 +39,10 @@ const router = (fastify, { }, next) => {
 
     var info = {
       MSH: [jsonData.MSH[3][1], jsonData.MSH[7][1]],
-      PID: [jsonData.PATIENT_RESULT[0].PATIENT.PID[3][0][1]],
+      PID: [
+        jsonData.PATIENT_RESULT[0].PATIENT[0],
+        jsonData.PATIENT_RESULT[0].PATIENT.PID[3][0][1]
+      ],
       OBR: [
         jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[6][1],
         jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[14][1]
@@ -69,38 +72,55 @@ const router = (fastify, { }, next) => {
     }
 
     let status = info.MSH[0];
-    let CID = info.PID[0];
+    let PID: any;
+    if (info.PID[0] == 'CID') {
+      let CID = info.PID[1];
+      let rs = await hl7Models.getPID(db, CID);
+      PID = rs;
+      console.log('HN :', PID);
+    } else {
+
+      PID = info.PID[1];
+
+    }
+
     let _info: any;
     let _vn: any;
 
-    let rs = await hl7Models.getPID(db, CID);
-    let PID = rs;
-    console.log('HN :', PID);
 
-    // let rsx = await hl7Models.getPID(db, PID);
-    // _vn = rsx;
+    let rsx = await hl7Models.getPID(db, PID);
+    _vn = rsx;
 
-    if (status == 'LABOLINK02') {
+    if (status == 'LABOLINK01') {
       _info = {
         SYSTOLIC: info.OBSERVATION.OBX0[1],
         PULSE: info.OBSERVATION.OBX1[1],
         DIASTOLIC: info.OBSERVATION.OBX2[1]
       }
-      // let rsbp = await hl7Models.updateBP(db, _vn, _info);
-      // let rsbp_o = await hl7Models.updateBP_o(db, _vn, _info, table);
-      // reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
+      if (_vn != '') {
+        let rsbp = await hl7Models.updateBP(db, _vn, _info);
+        let rsbp_o = await hl7Models.updateBP_o(db, _vn, _info, table);
+        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
+      } else {
+        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: 'ไม่พบผู้รับบริการในวันนี้', datas: _info, PID: PID });
+      }
 
-    } else if (status == 'LABOLINK01') {
+    } else if (status == 'LABOLINK02') {
       _info = {
         BMI: info.OBSERVATION.OBX0[1],
         WEIGHT: info.OBSERVATION.OBX1[1],
         HEIGHT: info.OBSERVATION.OBX2[1]
       }
-      // let rsbp = await hl7Models.updateBW(db, _vn, _info);
-      // let rsbp_o = await hl7Models.updateBW_o(db, _vn, _info, table);
-      // reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
+
+      if (_vn != '') {
+        let rsbp = await hl7Models.updateBW(db, _vn, _info);
+        let rsbp_o = await hl7Models.updateBW_o(db, _vn, _info, table);
+        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
+      } else {
+        reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: 'ไม่พบผู้รับบริการในวันนี้', datas: _info, PID: PID });
+      }
     } else {
-      reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: info });
+      reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: 'ข้อมูลที่ส่งมาไม่ตรงตาม format ที่ต้องการ', MSH: status });
     }
     reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: _info, PID: PID, datas: info });
   });
