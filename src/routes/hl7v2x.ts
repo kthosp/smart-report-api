@@ -39,9 +39,11 @@ const router = (fastify, { }, next) => {
     console.log(not_pid);
 
     var info: any;
+    var _hn: any;
     var _pid = not_pid || '';
     // console.log(jsonData.PATIENT_RESULT[0].PATIENT.PID[1]);
     if (!_pid) {
+      _hn = 'HN';
       info = {
         MSH: [jsonData.MSH[3][1], jsonData.MSH[7][1]],
         PID: [
@@ -76,6 +78,7 @@ const router = (fastify, { }, next) => {
       }
 
     } else {
+      _hn = 'CID';
       info = {
         MSH: [jsonData.MSH[3][1], jsonData.MSH[7][1]],
         PID: [
@@ -116,15 +119,12 @@ const router = (fastify, { }, next) => {
     console.log(info);
     console.log(info.PID[0]);
 
-    if (info.PID[0] == 'CID') {
+    if (_hn == 'CID') {
       let CID = info.PID[0];
-      console.log(CID);
-
       let rs = await hl7Models.getPID(db, CID);
-      PID = rs;
+      PID = rs[0].hn;
       console.log('1HN :', PID);
-    } else {
-
+    } else if (_hn == 'HN') {
       PID = info.PID[0];
       console.log('2HN :', PID);
 
