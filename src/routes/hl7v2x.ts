@@ -88,8 +88,10 @@ const router = (fastify, { }, next) => {
     let _vn: any;
 
 
-    let rsx = await hl7Models.getPID(db, PID);
-    _vn = rsx[0];
+    let rsx = await hl7Models.getLastVn(db, PID);
+    _vn = rsx;
+    console.log(_vn);
+
 
     if (status == 'LABOLINK01') {
       _info = {
