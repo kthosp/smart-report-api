@@ -1,11 +1,9 @@
 import Knex = require('knex');
 
 export class Hl7Models {
+
   getLastVn(knex: Knex, PID: any) {
-    return knex('ovst')
-      .select('vn')
-      .max('vn')
-      .where('hn', PID)
+    return knex.raw(`selct max(vn) from ovst where hn = ${PID} and date(vstdttm) = date(now())`)
   }
 
   getPID(knex: Knex, CID: any) {

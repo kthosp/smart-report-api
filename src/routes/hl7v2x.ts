@@ -8,7 +8,7 @@ import { Hl7Models } from '../models/hl72x';
 const hl7Models = new Hl7Models();
 
 const router = (fastify, { }, next) => {
-  var db: knex = fastify.db;
+  var db: knex = fastify.dbHIS;
 
   fastify.get('/', async (req: fastify.Request, reply: fastify.Reply) => {
     const hl7v2 = require('@redoxengine/redox-hl7-v2');
