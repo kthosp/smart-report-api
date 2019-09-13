@@ -2,8 +2,10 @@ import Knex = require('knex');
 
 export class Hl7Models {
 
-  getLastVn(knex: Knex, PID: any) {
-    return knex.raw(`select vn from ovst where hn = ${PID} and date(vstdttm) = date(now()) limit 1`)
+  async getLastVn(knex: Knex, PID: any) {
+    console.log(PID);
+    let data = await knex.raw(`select vn from ovst where hn = ${PID} and date(vstdttm) = date(now()) limit 1`)
+    return data[0];
   }
 
   getPID(knex: Knex, CID: any) {

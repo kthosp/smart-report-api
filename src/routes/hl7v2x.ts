@@ -131,12 +131,12 @@ const router = (fastify, { }, next) => {
     }
 
     let _info: any;
-    let _vn: any;
+    let _vn: any = [];
 
 
     let rsx = await hl7Models.getLastVn(db, PID);
     _vn = rsx[0].vn;
-    console.log(_vn);
+    console.log(rsx[0].vn);
 
 
     if (status == 'LABOLINK01') {
