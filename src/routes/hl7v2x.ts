@@ -74,9 +74,11 @@ const router = (fastify, { }, next) => {
     let _vn: any;
 
     let rs = await hl7Models.getPID(db, CID);
-    let PID = rs[0];
-    let rsx = await hl7Models.getPID(db, PID);
-    _vn = rsx[0];
+    let PID = rs;
+    console.log('HN :', PID);
+
+    // let rsx = await hl7Models.getPID(db, PID);
+    // _vn = rsx;
 
     if (status == 'LABOLINK02') {
       _info = {
@@ -84,9 +86,9 @@ const router = (fastify, { }, next) => {
         PULSE: info.OBSERVATION.OBX1[1],
         DIASTOLIC: info.OBSERVATION.OBX2[1]
       }
-      let rsbp = await hl7Models.updateBP(db, _vn, _info);
-      let rsbp_o = await hl7Models.updateBP_o(db, _vn, _info, table);
-      reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
+      // let rsbp = await hl7Models.updateBP(db, _vn, _info);
+      // let rsbp_o = await hl7Models.updateBP_o(db, _vn, _info, table);
+      // reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
 
     } else if (status == 'LABOLINK01') {
       _info = {
@@ -94,13 +96,13 @@ const router = (fastify, { }, next) => {
         WEIGHT: info.OBSERVATION.OBX1[1],
         HEIGHT: info.OBSERVATION.OBX2[1]
       }
-      let rsbp = await hl7Models.updateBW(db, _vn, _info);
-      let rsbp_o = await hl7Models.updateBW_o(db, _vn, _info, table);
-      reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
+      // let rsbp = await hl7Models.updateBW(db, _vn, _info);
+      // let rsbp_o = await hl7Models.updateBW_o(db, _vn, _info, table);
+      // reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
     } else {
       reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: info });
     }
-    // reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: _info ,datas:info});
+    reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: _info, PID: PID, datas: info });
   });
 
   next();
