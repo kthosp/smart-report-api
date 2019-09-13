@@ -35,52 +35,98 @@ const router = (fastify, { }, next) => {
 
     var table = 'o' + moment(isodate).format('DDMM') + thDate;
     const jsonData = parser.parse(req.body.hl7);
-    console.log(jsonData);
+    var not_pid = jsonData.PATIENT_RESULT[0].PATIENT.PID[4]
+    console.log(not_pid);
 
-    var info = {
-      MSH: [jsonData.MSH[3][1], jsonData.MSH[7][1]],
-      PID: [
-        jsonData.PATIENT_RESULT[0].PATIENT[0],
-        jsonData.PATIENT_RESULT[0].PATIENT.PID[3][0][1]
-      ],
-      OBR: [
-        jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[6][1],
-        jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[14][1]
-      ],
-      OBSERVATION: {
-        OBX0:
-          [
-            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[3][1],
-            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[5][0],
-            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[6][1],
-            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[14][1]
-          ]
-        ,
-        OBX1: [
-          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[3][1],
-          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[5][0],
-          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[6][1],
-          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[14][1]
+    var info: any;
+    var _pid = not_pid || '';
+    // console.log(jsonData.PATIENT_RESULT[0].PATIENT.PID[1]);
+    if (!_pid) {
+      info = {
+        MSH: [jsonData.MSH[3][1], jsonData.MSH[7][1]],
+        PID: [
+          jsonData.PATIENT_RESULT[0].PATIENT.PID[3][0][1]
         ],
-        OBX2: [
-          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[3][1],
-          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[5][0],
-          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[6][1],
-          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[14][1]
-        ]
-      },
+        OBR: [
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[6][1],
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[14][1]
+        ],
+        OBSERVATION: {
+          OBX0:
+            [
+              jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[3][1],
+              jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[5][0],
+              jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[6][1],
+              jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[14][1]
+            ]
+          ,
+          OBX1: [
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[3][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[5][0],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[6][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[14][1]
+          ],
+          OBX2: [
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[3][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[5][0],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[6][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[14][1]
+          ]
+        },
+      }
+
+    } else {
+      info = {
+        MSH: [jsonData.MSH[3][1], jsonData.MSH[7][1]],
+        PID: [
+          jsonData.PATIENT_RESULT[0].PATIENT.PID[4][0][1]
+        ],
+        OBR: [
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[6][1],
+          jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBR[14][1]
+        ],
+        OBSERVATION: {
+          OBX0:
+            [
+              jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[3][1],
+              jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[5][0],
+              jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[6][1],
+              jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[0].OBX[14][1]
+            ]
+          ,
+          OBX1: [
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[3][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[5][0],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[6][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[1].OBX[14][1]
+          ],
+          OBX2: [
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[3][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[5][0],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[6][1],
+            jsonData.PATIENT_RESULT[0].ORDER_OBSERVATION[0].OBSERVATION[2].OBX[14][1]
+          ]
+        },
+      }
+
     }
 
     let status = info.MSH[0];
     let PID: any;
+    console.log(info);
+    console.log(info.PID[0]);
+
     if (info.PID[0] == 'CID') {
-      let CID = info.PID[1];
+      let CID = info.PID[0];
+      console.log(CID);
+
       let rs = await hl7Models.getPID(db, CID);
       PID = rs;
-      console.log('HN :', PID);
+      console.log('1HN :', PID);
     } else {
 
-      PID = info.PID[1];
+      PID = info.PID[0];
+      console.log('2HN :', PID);
 
     }
 
@@ -89,7 +135,7 @@ const router = (fastify, { }, next) => {
 
 
     let rsx = await hl7Models.getLastVn(db, PID);
-    _vn = rsx;
+    _vn = rsx[0];
     console.log(_vn);
 
 
