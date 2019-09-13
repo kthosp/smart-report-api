@@ -145,7 +145,7 @@ const router = (fastify, { }, next) => {
         PULSE: info.OBSERVATION.OBX1[1],
         DIASTOLIC: info.OBSERVATION.OBX2[1]
       }
-      if (!_vn) {
+      if (_vn) {
         let rsbp = await hl7Models.updateBP(db, _vn, _info);
         let rsbp_o = await hl7Models.updateBP_o(db, _vn, _info, table);
         reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
@@ -160,7 +160,7 @@ const router = (fastify, { }, next) => {
         HEIGHT: info.OBSERVATION.OBX2[1]
       }
 
-      if (!_vn) {
+      if (_vn) {
         let rsbp = await hl7Models.updateBW(db, _vn, _info);
         let rsbp_o = await hl7Models.updateBW_o(db, _vn, _info, table);
         reply.status(HttpStatus.OK).send({ statusCode: HttpStatus.OK, info: [rsbp, rsbp_o] })
